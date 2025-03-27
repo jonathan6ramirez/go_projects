@@ -7,13 +7,25 @@ import (
 )
 
 func TestHasNextToken(t *testing.T) {
-	input := `=+(){},;`
+	input := `
+	let five = 5;
+	let ten = 10;
+
+	let add = fn(x,y) {
+		x + y;
+	};
+
+	let result = add(five, ten);
+	`
 
 	tests := []struct {
 		expectedType    token.TokenType
 		expectedLiteral string
 	}{
+		{token.LET, "let"},
+		{token.IDENT, "five"},
 		{token.ASSIGN, "="},
+		{token.INT, "5"},
 		{token.PLUS, "+"},
 		{token.LPAREN, "("},
 		{token.RPAREN, ")"},
