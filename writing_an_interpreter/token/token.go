@@ -1,5 +1,7 @@
 package token
 
+// import "fmt"
+
 type TokenType string
 
 type Token struct {
@@ -12,12 +14,19 @@ const (
 	EOF     = "EOF"
 
 	//Identifiers + literals
-	INDENT = "IDENT" // add, foobar, x, y...
-	INT    = "INT"
+	IDENT = "IDENT" // add, foobar, x, y...
+	INT   = "INT"
 
 	//Operators
-	ASSIGN = "="
-	PLUS   = "+"
+	ASSIGN   = "="
+	PLUS     = "+"
+	MINUS    = "-"
+	BANG     = "!"
+	ASTERISK = "*"
+	SLASH    = "/"
+
+	LT = "<"
+	GT = ">"
 
 	//Delimiters
 	COMMA     = ","
@@ -29,6 +38,33 @@ const (
 	RBRACE = "}"
 
 	// Keywords
-	FUNTION = "FUNCTION"
-	LET     = "LET"
+	FUNCTION = "FUNCTION"
+	LET      = "LET"
+	TRUE     = "TRUE"
+	FALSE    = "FALSE"
+	IF       = "IF"
+	ELSE     = "ELSE"
+	RETURN   = "RETURN"
+
+	// Equality signs
+	EQ     = "=="
+	NOT_EQ = "!="
 )
+
+var keywords = map[string]TokenType{
+	"fn":     FUNCTION,
+	"let":    LET,
+	"true":   TRUE,
+	"false":  FALSE,
+	"if":     IF,
+	"else":   ELSE,
+	"return": RETURN,
+}
+
+func LookupIdent(ident string) TokenType {
+	// fmt.Printf("this is th indentifie: %s\n", ident)
+	if tok, ok := keywords[ident]; ok {
+		return tok
+	}
+	return IDENT
+}
