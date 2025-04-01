@@ -2,6 +2,7 @@ package parser
 
 import (
 	"fmt"
+	"strconv"
 	"writing_an_interpreter/ast"
 	"writing_an_interpreter/lexer"
 	"writing_an_interpreter/token"
@@ -108,6 +109,7 @@ func (p *Parser) parseExpression(precedence int) ast.Expression {
 		return nil
 	}
 
+	// INFO: the prefix function is a function variable per say
 	leftExp := prefix()
 
 	return leftExp
@@ -155,15 +157,34 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	return stmt
 }
 
+func (p *Parser) parseIntegerLiteral() ast.Expression {
+	lit := &ast.IntegerLiteral{Token: p.curToken}
+
+	value, err := strconv.ParseInt(p.curToken.Literal, 0, 64)
+	if err != nil {
+		msg := fmt.Sprintf("could not parse %q as integer", p.curToken.Literal)
+		p.errors = append(p.errors, msg)
+		return nil
+	}
+
+	lit.Value = value
+
+	return lit
+}
+
 func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	// create our statement node
 	stmt := &ast.ExpressionStatement{Token: p.curToken}
 
+	// Calling the parseExpression function with the LOWEST constant
 	stmt.Expression = p.parseExpression(LOWEST)
 
+	// check to see if their is an optional semicolon next
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
 
+	// return the statement node
 	return stmt
 }
 

@@ -111,7 +111,7 @@ func checkParserErrors(t *testing.T, p *Parser) {
 	t.FailNow()
 }
 
-func TestIdentifieExpression(t *testing.T) {
+func TestIdentifierExpression(t *testing.T) {
 	input := "foobar;"
 
 	l := lexer.New(input)
