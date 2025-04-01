@@ -38,7 +38,7 @@ type Parser struct {
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
 		l:      l,
-		errors: []string{},
+		errors: []string{}, // we're initializing with an empty slice and composite literal
 	}
 
 	// Read two tokens, so curToken and peekToken are both set
