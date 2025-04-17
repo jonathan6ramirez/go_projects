@@ -132,12 +132,12 @@ func applyFunction(fn object.Object, args []object.Object) object.Object {
 		return newError("not a function: %s", fn.Type())
 	}
 
-	extendedEnv := extendFunction(function, args)
+	extendedEnv := enxtendFunctionEnv(function, args)
 	evaluated := Eval(function.Body, extendedEnv)
 	return unwrapReturnValue(evaluated)
 }
 
-func extendFunction(
+func enxtendFunctionEnv(
 	fn *object.Function,
 	args []object.Object,
 
