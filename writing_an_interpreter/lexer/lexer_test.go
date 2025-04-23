@@ -137,7 +137,7 @@ func TestHasNextToken(t *testing.T) {
 		{token.STRING, "foo"},
 		{token.COLON, ":"},
 		{token.STRING, "bar"},
-		{token.LBRACE, "}"},
+		{token.RBRACE, "}"},
 
 		{token.EOF, ""},
 	}
