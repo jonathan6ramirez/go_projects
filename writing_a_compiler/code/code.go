@@ -13,6 +13,40 @@ type Opcode byte
 const (
 	OpConstant Opcode = iota
 	OpAdd
+	OpPop
+
+	OpSub
+	OpMul
+	OpDiv
+
+	OpTrue
+	OpFalse
+
+	OpEqual
+	OpNotEqual
+	OpGreaterThan
+
+	OpMinus
+	OpBang
+
+	OpJumpNotTruthy
+	OpJump
+
+	OpNull
+
+	OpGetGlobal
+	OpSetGlobal
+
+	OpArray
+	OpHash
+	OpIndex
+
+	OpCall
+	OpReturnValue
+	OpReturn
+
+	OpGetLocal
+	OpSetLocal
 )
 
 type Definition struct {
@@ -23,6 +57,40 @@ type Definition struct {
 var definitions = map[Opcode]*Definition{
 	OpConstant: {"OpConstant", []int{2}},
 	OpAdd:      {"OpAdd", []int{}},
+	OpPop:      {"OpPop", []int{}},
+
+	OpSub: {"OpSub", []int{}},
+	OpMul: {"OpMul", []int{}},
+	OpDiv: {"OpDiv", []int{}},
+
+	OpTrue:  {"OpTrue", []int{}},
+	OpFalse: {"OpFalse", []int{}},
+
+	OpEqual:       {"OpEqual", []int{}},
+	OpNotEqual:    {"OpNotEqual", []int{}},
+	OpGreaterThan: {"OpGreaterThan", []int{}},
+
+	OpMinus: {"OpMinus", []int{}},
+	OpBang:  {"OpBang", []int{}},
+
+	OpJumpNotTruthy: {"OpJumpNotTruthy", []int{2}},
+	OpJump:          {"OpJump", []int{2}},
+
+	OpNull: {"OpNull", []int{}},
+
+	OpGetGlobal: {"OpGetGlobal", []int{2}},
+	OpSetGlobal: {"OpSetGlobal", []int{2}},
+
+	OpArray: {"OpArray", []int{2}},
+	OpHash:  {"OpHash", []int{2}},
+	OpIndex: {"OpIndex", []int{}},
+
+	OpCall:        {"OpCall", []int{}},
+	OpReturnValue: {"OpReturnValue", []int{}},
+	OpReturn:      {"OpReturn", []int{}},
+
+	OpGetLocal: {"OpGetLocal", []int{1}},
+	OpSetLocal: {"OpSetLocal", []int{1}},
 }
 
 func Lookup(op byte) (*Definition, error) {
@@ -93,6 +161,8 @@ func Make(op Opcode, operands ...int) []byte {
 		switch width {
 		case 2:
 			binary.BigEndian.PutUint16(instruction[offset:], uint16(o))
+		case 1:
+			instruction[offset] = byte(o)
 		}
 		offset += width
 	}
@@ -108,6 +178,8 @@ func ReadOperands(def *Definition, ins Instructions) ([]int, int) {
 		switch width {
 		case 2:
 			operands[i] = int(ReadUint16(ins[offset:]))
+		case 1:
+			operands[i] = int(ReadUint8(ins[offset:]))
 		}
 
 		offset += width
@@ -119,3 +191,5 @@ func ReadOperands(def *Definition, ins Instructions) ([]int, int) {
 func ReadUint16(ins Instructions) uint16 {
 	return binary.BigEndian.Uint16(ins)
 }
+
+func ReadUint8(ins Instructions) uint8 { return uint8(ins[0]) }
